@@ -1,0 +1,17 @@
+<section>
+    <h2>thank you {{ticket.purchaser}}</h2>
+    <h1>Your order was processed successfully.</h1>
+    <h2>Details</h2>
+
+    <ol>
+        {{#each ticket.products}}
+            <p>{{this.code}}</p>
+            <p>{{this.title}}</p>
+            <p>$ {{this.price}}</p>
+            <p>{{this.quantity}}</p>
+        {{/each}}
+    </ol>
+
+    <h2>TOTAL $ {{ticket.amount}}</h2>
+
+</section>

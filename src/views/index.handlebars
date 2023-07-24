@@ -1,5 +1,27 @@
 <section>
-    <h2> hola {{user.name}}</h2>
-    <h3>tu correo registrado es {{user.email}}</h3>
-    <h1>Index</h1>
+    {{#if user}}
+    <h2> Welcome {{user.name}}!</h2>
+    <p id="cartId">{{user.cartId}}</p>
+    {{else}}
+    <h2>Welcome to Who Neen Site!</h2>
+    {{/if}}
+
+
+    <h1>Explore our Products</h1>
+
+    <a href="/cart">go to Cart</a>
+    <ol>
+        {{#each products}}
+            <li>
+                <p>{{this.title}}</p>
+                <p>{{this.description}}</p>
+                <p>{{this.price}}</p>
+                <a href="" id="{{this._id}}" class="add_btn">add to cart</a>
+            </li>
+        {{/each}}
+    </ol>
+
+    <a href="/cart">go to Cart</a>
 </section>
+
+<script src="/js/index.js"></script>

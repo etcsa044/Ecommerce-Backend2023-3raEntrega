@@ -1,0 +1,29 @@
+<section>
+    <h1>Products on your cart:</h1>
+
+
+    <ol>
+        {{#each cart.products}}
+        <li>
+            <p>{{this.product.title}}</p>
+            <p>Unit price ${{this.product.price}}</p>
+            <p>SUBTOTAL: ${{this.subTotal}}</p>
+            <p>Cantidad: {{this.quantity}}</p>
+        </li>
+
+        {{/each}}
+    </ol>
+
+    <h2>TOTAL $ {{cart.total}}</h2>
+
+    <a href="" id="buy_btn">Buy Now</a>
+
+
+
+</section>
+
+
+
+
+
+<script src="/js/cart.js"></script>

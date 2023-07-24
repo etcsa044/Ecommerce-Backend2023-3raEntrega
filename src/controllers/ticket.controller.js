@@ -1,25 +1,24 @@
 import moment from "moment";
 import alphanumeric from "alphanumeric-id";
-import { productServices, ticketServices, userServices } from "../services/indexServices.js";
+import { cartServices, productServices, ticketServices, userServices } from "../services/indexServices.js";
 import BaseController from "./Controller.js";
-import { now } from "mongoose";
+
 
 const ticketService = ticketServices;
 const productService = productServices;
 const userService = userServices;
+const cartService = cartServices
 
 
 export default class TicketController extends BaseController {
 
     constructor() {
-        super(ticketService, productService, userService);
+        super(ticketService, productService, userService, cartService);
     }
-
-    productService = productService;
 
 
     createTicket = async (req, res) => {
-
+        
         //Get user
         const { user } = req.user;
         const uid = user.id;
@@ -28,9 +27,10 @@ export default class TicketController extends BaseController {
         //Get cart:
         const userCart = updatedUser.cart
 
+        
         //Get products on cart:
         const productsOnCart = userCart.products;
-        /* console.log(productsOnCart); */
+        
 
         //products stock Check:
         const availableProducts = [];
@@ -55,10 +55,9 @@ export default class TicketController extends BaseController {
         checkStock(productsOnCart);
 
         //
-
         //Get Amount:
-        let amount = availableProducts.reduce((acum, e) => acum + e.price , 0);
-
+        let amount = availableProducts.reduce((acum, e) => acum + (e.price * e.quantity) , 0);
+        
         //Get purchaser mail:
         let purchaser = updatedUser.email;
 
@@ -88,11 +87,13 @@ export default class TicketController extends BaseController {
           productsOnCart.map((e) => updateStock(e));
 
 
-        console.log(newTicket)
+        /* console.log(newTicket)
+        console.log(unavailableProducts) */
      
         try {
-            ticketService.createObject(newTicket);
-            res.sendSuccess('User Ticket Saved')
+            const result = await ticketService.createObject(newTicket);
+            await cartService.updateObject(userCart._id, {products : unavailableProducts});
+            res.sendSuccessWithPayload(result)
 
         } catch (error) {
             res.sendInternalError(error);

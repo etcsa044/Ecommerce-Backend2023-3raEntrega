@@ -21,7 +21,7 @@ login_frm.addEventListener("submit", async evt => {
     })
         const responseData = await response.json();
         if (responseData.status === "success"){
-            window.location.replace("/api/sessions/current");
+            window.location.replace("/");
         }
         // if(responseData.error.length >= 5){
         //     window.location.replace("/maxattempts")

@@ -2,14 +2,17 @@ import passport from "passport";
 import { Strategy, ExtractJwt } from "passport-jwt";
 import local from "passport-local";
 import { Hasher } from "../../utils/utils.js";
-import { cartManager, userManager } from "../../../dao/mongo/managers/index.js";
 import { cookieExtractor } from "../../utils/utils.js";
 import config from "../../config.js";
-import loginDTO from "../../dtos/user.dto.js";
+import UserDTO from "../../dtos/user.dto.js";
+import { cartServices, userServices } from "../../services/indexServices.js";
 
 const LocalStrategy = local.Strategy;
 const JWTStrategy = Strategy;
 const hasher = new Hasher();
+const userService = userServices;
+const cartService = cartServices;
+
 
 const initializePassportStrategies = () => {
 
@@ -17,19 +20,17 @@ const initializePassportStrategies = () => {
     // Estrategia de Registro: Register
     passport.use("register", new LocalStrategy({ passReqToCallback: true, usernameField: "email" }, async (req, email, password, done) => {
         
-        try {
-            
+        try {           
             
             const { first_name, last_name } = req.body;
 
             if (!first_name || !last_name || !email || !password) return done(null, false, { status: "Error", error: "Debe completar todos los campos" });
-            let user = await userManager.getBy({email});
+            let user = await userService.getObjectByParam({email});
 
             if (user) return done(null, false, { message: "El email ya se encuentra registrado" });
             const hashedPassword = await hasher.createHash(password);
             
-            const cart = await cartManager.create();
-
+            const cart = await cartService.createObject();
             user = {
                 first_name,
                 last_name,
@@ -38,7 +39,7 @@ const initializePassportStrategies = () => {
                 password: hashedPassword
             }
 
-            const result = userManager.create(user);
+            const result = userService.createObject(user);
 
             return done(null, result, { message: "Usuario creado correctamente." });
 
@@ -64,7 +65,7 @@ const initializePassportStrategies = () => {
                 return done(null, user);
             };
 
-            userDB = await userManager.getBy({email});
+            userDB = await userService.getObjectByParam({email});
 
             if (!userDB) return done(null, false, { message: "Credenciales Incorrectas" });
 
@@ -73,8 +74,7 @@ const initializePassportStrategies = () => {
             if (!isValidPassword) return done(null, false, { message: "Credenciales Incorrectas" });
 
             //DTO
-            const user = new loginDTO(userDB);
-            
+            const user = UserDTO.getPublicUser(userDB);
             return done(null, user);
 
         } catch (error) {

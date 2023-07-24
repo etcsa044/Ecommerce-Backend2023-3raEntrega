@@ -1,4 +1,8 @@
+import ViewsController from "../controllers/views.controller.js";
 import BaseRouter from "./Router.js";
+
+
+const viewsController = new ViewsController()
 
 export default class ViewsRouter extends BaseRouter {
 
@@ -7,10 +11,13 @@ export default class ViewsRouter extends BaseRouter {
         this.get(
             "/",
             ["PUBLIC"],
-            (req, res) => {
-                let user = req.user
-                res.render("index", user);
-            }
+            viewsController.renderIndex
+        )
+
+        this.get(
+            '/cart',
+            ['PUBLIC'], //PRIVATE
+            viewsController.renderCart
         )
 
         this.get(
@@ -26,6 +33,12 @@ export default class ViewsRouter extends BaseRouter {
             (req, res) => {
                 res.render("register");
             }
+        )
+
+        this.get(
+            "/ticket/:tid",
+            ["PUBLIC"],
+            viewsController.renderTicket
         )
     }
 

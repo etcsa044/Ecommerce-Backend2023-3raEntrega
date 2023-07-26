@@ -37,6 +37,9 @@ export default class BaseService {
      */
     createObject = object => this.manager.create(object);
 
+
+    createManyObjects = objects => this.manager.createManyObjects(objects);
+
     /**
      * Update an existing object by its unique identifier (ID).
      * @param {string} id - The ID of the object to update.

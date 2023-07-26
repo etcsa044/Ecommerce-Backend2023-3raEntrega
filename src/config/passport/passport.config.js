@@ -6,6 +6,9 @@ import { cookieExtractor } from "../../utils/utils.js";
 import config from "../../config.js";
 import UserDTO from "../../dtos/user.dto.js";
 import { cartServices, userServices } from "../../services/indexServices.js";
+import ErrorService from "../../services/errors.service.js";
+import { userErrorIncompleteValues } from "../../constants/userErrors.js";
+import EErrors from "../../constants/EErrors.js";
 
 const LocalStrategy = local.Strategy;
 const JWTStrategy = Strategy;
@@ -24,7 +27,16 @@ const initializePassportStrategies = () => {
             
             const { first_name, last_name } = req.body;
 
-            if (!first_name || !last_name || !email || !password) return done(null, false, { status: "Error", error: "Debe completar todos los campos" });
+            if (!first_name || !last_name || !email || !password){
+                ErrorService.createError({
+                    name:'User creation error',
+                    cause:userErrorIncompleteValues({first_name, last_name, email, password}),
+                    message: 'Error adding new user',
+                    code: EErrors.INCOMPLETE_VALUES,
+                    status: 400
+                })
+                return done(null, false, { status: "Error", error: "Debe completar todos los campos" });
+            }
             let user = await userService.getObjectByParam({email});
 
             if (user) return done(null, false, { message: "El email ya se encuentra registrado" });

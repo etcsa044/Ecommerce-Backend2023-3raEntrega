@@ -10,20 +10,26 @@ export default class SessionRouter extends BaseRouter {
     init() {
 
         this.get(
-            "/",
+            "/mock",
             ["PUBLIC"],
+            userController.generateMocksUsers
+        )
+        
+        this.get(
+            "/",
+            ["ADMIN"],
             userController.getObjects
         )
 
         this.get(
             "/:id",
-            ["PUBLIC"],
+            ["USER", "ADMIN"],
             userController.getObjectById
         )
 
         this.get(
             "/:attribute/:value",
-            ["PUBLIC"],
+            ["USER"],
             userController.getObjectBy
         )
 
@@ -42,7 +48,7 @@ export default class SessionRouter extends BaseRouter {
 
         this.post(
             "/login",
-            ["PUBLIC"],
+            ["NO_AUTH"],
             passportCall(
                 "login",
                 {
@@ -72,6 +78,8 @@ export default class SessionRouter extends BaseRouter {
             ["USER"],
             userController.userLogout
         )
+
+        
 
 
     }

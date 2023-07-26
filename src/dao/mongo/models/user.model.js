@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
 
 const collection = "users";
 
@@ -30,6 +31,9 @@ const schema = new mongoose.Schema({
        default:"user" 
     }
 },{timestamps:{createdAt:`created_at`, updatedAt:`updated_at`}})
+
+
+schema.plugin(mongoosePaginate);
 
 schema.pre('find',function(){
     this.populate("cart");

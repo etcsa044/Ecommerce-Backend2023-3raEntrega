@@ -1,5 +1,6 @@
 import BaseController from "./Controller.js";
 import { productServices } from "../services/indexServices.js";
+import { generateProduct } from "../mocks/products.mocks.js";
 
 const productService = productServices;
 
@@ -51,6 +52,24 @@ export default class ProductController extends BaseController {
         }
 
     }
+
+
+    generateMocksProducts = async (req, res) => {
+        
+        const products = [];
+        for (let i = 0; i <= 100; i++) {
+            products.push(generateProduct())
+        }
+        
+        try {
+            await productService.createManyObjects(products)
+            res.sendSuccessWithPayload(products);
+        } catch (error) {
+            res.sendInternalError(error);
+        }
+    }
+
+
 }
 
 

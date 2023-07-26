@@ -7,6 +7,12 @@ export default class ProductRouter extends BaseRouter {
 
     init() {
 
+        this.get(
+            "/mock",
+            ["PUBLIC"],
+            productController.generateMocksProducts
+        )
+
         // Retrieve all products. [PUBLIC access]
         this.get(
             "/",
@@ -48,6 +54,8 @@ export default class ProductRouter extends BaseRouter {
             ["PUBLIC"],
             productController.deleteObject
         )
+
+
 
     }
 

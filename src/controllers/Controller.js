@@ -3,6 +3,8 @@ export default class BaseController {
         this.service = service;
     }
 
+    
+
     // Retrieve all objects from the service.
     getObjects = async (req, res) => {
         try {
@@ -40,6 +42,7 @@ export default class BaseController {
             res.sendInternalError(error);
         }
     }
+
 
     // Update an object in the manager by its ID (id) with the provided data (req.body).
     updateObject = async (req, res) => {

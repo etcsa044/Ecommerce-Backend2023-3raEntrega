@@ -17,6 +17,8 @@ export default class BaseManager {
     // Create a new object in the model with the provided data (object).
     create = object => this.model.create(object);
 
+    createManyObjects = objects => this.model.insertMany(objects)
+
     // Update an object in the model by its ID (id) with the provided data (object).
     update = (id, object) => this.model.findByIdAndUpdate(id, { $set: object });
 

@@ -54,7 +54,12 @@ export default class TicketController extends BaseController {
         }
         checkStock(productsOnCart);
 
-        //
+        if(availableProducts.length === 0){
+            alert('There is no products availables on cart')
+            alert('You will be redirected to Home')
+            res.redirect('/');
+        }
+        
         //Get Amount:
         let amount = availableProducts.reduce((acum, e) => acum + (e.price * e.quantity) , 0);
         
@@ -74,6 +79,8 @@ export default class TicketController extends BaseController {
             purchaser: purchaser
         }
 
+        
+
 
         //Update Stock Process:
         async function updateStock(e) {
@@ -86,9 +93,6 @@ export default class TicketController extends BaseController {
           
           productsOnCart.map((e) => updateStock(e));
 
-
-        /* console.log(newTicket)
-        console.log(unavailableProducts) */
      
         try {
             const result = await ticketService.createObject(newTicket);

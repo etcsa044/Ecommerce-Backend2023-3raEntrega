@@ -18,19 +18,20 @@ export default class BaseRouter {
             this.generateCustomResponses,                   //Response, la capacidad de responder de manera predeerminada                 
             passportCall("jwt", { strategyType: "jwt" }),
             this.handlePolicies(policies),
-            this.applyCallbacks(callbacks)
+            this.applyCallbacks(callbacks),
+            this.errorHandler
         );
     }
 
     
     post(path, policies, ...callbacks) {
-        this.router.post(path, this.generateCustomResponses, passportCall("jwt", { strategyType: "jwt" }), this.handlePolicies(policies), this.applyCallbacks(callbacks));
+        this.router.post(path, this.generateCustomResponses, passportCall("jwt", { strategyType: "jwt" }), this.handlePolicies(policies), this.applyCallbacks(callbacks), this.errorHandler);
     }
     put(path, policies, ...callbacks) {
-        this.router.put(path, this.generateCustomResponses, passportCall("jwt", { strategyType: "jwt" }), this.handlePolicies(policies), this.applyCallbacks(callbacks));
+        this.router.put(path, this.generateCustomResponses, passportCall("jwt", { strategyType: "jwt" }), this.handlePolicies(policies), this.applyCallbacks(callbacks), this.errorHandler);
     }
     delete(path, policies, ...callbacks) {
-        this.router.delete(path, this.generateCustomResponses, passportCall("jwt", { strategyType: "jwt" }), this.handlePolicies(policies), this.applyCallbacks(callbacks));
+        this.router.delete(path, this.generateCustomResponses, passportCall("jwt", { strategyType: "jwt" }), this.handlePolicies(policies), this.applyCallbacks(callbacks), this.errorHandler);
     }
 
 
@@ -44,6 +45,24 @@ export default class BaseRouter {
         res.sendUnauthorized = error => res.status(400).send({ status: "error", error });
         next();
     }
+
+
+    //Errors Middleware
+
+    errorHandler = (error, req, res, next) => {
+        res.status(error.status);
+        console.log(error);
+        next()
+    }
+
+    //implementar luego este middleware
+    attachLogger = (req,res,next) =>{
+        req.logger = logger.logger;
+        req.logger.http(`${req.method} en ${req.url} - ${new Date().toLocaleTimeString()}`);
+        res.send('prueba')
+        next();
+    }
+    
 
     // Handle Policies:
 

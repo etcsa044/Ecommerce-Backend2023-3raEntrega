@@ -1,12 +1,9 @@
 import express from "express";
 import handlebars from "express-handlebars";
 import initializePassportStrategies from "./config/passport/passport.config.js";
-import mongoose from "mongoose";
 import passport from "passport";
 import cookieParser from "cookie-parser";
-
 import { __src, __root } from "./utils/utils.js";
-
 import SessionRouter from "./routes/sessions.routes.js";
 import ViewsRouter from "./routes/views.routes.js";
 import ProductRouter from "./routes/products.routes.js";
@@ -15,10 +12,13 @@ import config from './config.js';
 import MongoSingleton from "./config/mongo/singleton.config.js";
 import TicketRouter from "./routes/ticket.routes.js";
 
+
 //CREACION SERVER:
 const app = express();
 const PORT = config.app.PORT;
 const server = app.listen(PORT, () => { console.log(`listening on PORT ${PORT}`) });
+
+/* logger.log('debug', 'mensaje silly'); */
 
 // Instancias Router:
 const cartRouter = new CartRouter()

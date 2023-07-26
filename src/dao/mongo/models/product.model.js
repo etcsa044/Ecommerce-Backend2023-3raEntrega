@@ -20,6 +20,7 @@ const schema = new mongoose.Schema({
     },
     thumbnail:{
         type: Array,
+        default:["/img/notFound/image-not-found-scaled-640.png"],
         required:true   
     },
     code:{

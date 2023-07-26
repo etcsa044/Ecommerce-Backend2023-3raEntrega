@@ -10,28 +10,28 @@ export default class CartRouter extends BaseRouter {
         // Retrieve all carts.
         this.get(
             "/",
-            ["PUBLIC"],
+            ["ADMIN"],
             cartController.getObjects
         )
 
         // Retrieve a cart by its ID.
         this.get(
             "/:id",
-            ["PUBLIC"],
+            ["USER"],
             cartController.getObjectById
         )
 
         // Retrieve carts based on a specific attribute and value.
         this.get(
             "/:attribute/:value",
-            ["PUBLIC"],
+            ["ADMIN"],
             cartController.getObjectBy
         )
 
         // Create a new cart.
         this.post(
             "/",
-            ["PUBLIC"],
+            ["USER"],
             cartController.create
         )
 

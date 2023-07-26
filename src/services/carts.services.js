@@ -1,6 +1,6 @@
-import { cartManager } from "../../dao/mongo/managers/index.js";
+import { cartManager } from "../dao/mongo/managers/index.js";
 import BaseService from "./baseService.js";
-
+ 
 
 const manager = cartManager
 

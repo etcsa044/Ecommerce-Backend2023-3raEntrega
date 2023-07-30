@@ -52,5 +52,3 @@ app.use("/api/products", productRouter.getRouter());
 app.use("/api/tickets", ticketRouter.getRouter());
 app.use("/api/sessions", sessionRouter.getRouter());
 
-
-

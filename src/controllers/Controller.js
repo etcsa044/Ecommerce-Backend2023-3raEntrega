@@ -60,7 +60,6 @@ export default class BaseController {
     deleteObject = async (req, res) => {
         const { id } = req.params;
         try {
-            console.log(this.service)
             const result = await this.service.deleteObject(id);
             if (!result) return res.sendNotFound();
             res.sendSuccess("Deleted");

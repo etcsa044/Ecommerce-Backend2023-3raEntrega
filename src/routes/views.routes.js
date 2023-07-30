@@ -16,7 +16,7 @@ export default class ViewsRouter extends BaseRouter {
 
         this.get(
             '/cart',
-            ['PUBLIC'], //PRIVATE
+            ['PUBLIC'],
             viewsController.renderCart
         )
 
@@ -39,6 +39,15 @@ export default class ViewsRouter extends BaseRouter {
             "/ticket/:tid",
             ["PUBLIC"],
             viewsController.renderTicket
+        )
+
+        this.get(
+            "/loggertest",
+            ["PUBLIC"],
+            (req, res) => {
+                console.log('Testing');
+                res.send("TESTING")
+            }
         )
     }
 

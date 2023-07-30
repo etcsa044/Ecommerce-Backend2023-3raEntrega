@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { passportCall } from "../services/passportcall.service.js";
+import LoggerService from "../services/logger.service.js";
+
 
 export default class BaseRouter {
     constructor() {
@@ -13,9 +15,10 @@ export default class BaseRouter {
 
 
     get(path, policies, ...callbacks) {
-        this.router.get(                                    //verbo
-            path,                                          //ruta
-            this.generateCustomResponses,                   //Response, la capacidad de responder de manera predeerminada                 
+        this.router.get(
+            path,
+            this.attachLogger,
+            this.generateCustomResponses,
             passportCall("jwt", { strategyType: "jwt" }),
             this.handlePolicies(policies),
             this.applyCallbacks(callbacks),
@@ -23,15 +26,37 @@ export default class BaseRouter {
         );
     }
 
-    
+
     post(path, policies, ...callbacks) {
-        this.router.post(path, this.generateCustomResponses, passportCall("jwt", { strategyType: "jwt" }), this.handlePolicies(policies), this.applyCallbacks(callbacks), this.errorHandler);
+        this.router.post(
+            path,
+            this.attachLogger,
+            this.generateCustomResponses,
+            passportCall("jwt", { strategyType: "jwt" }),
+            this.handlePolicies(policies),
+            this.applyCallbacks(callbacks),
+            this.errorHandler
+        );
     }
     put(path, policies, ...callbacks) {
-        this.router.put(path, this.generateCustomResponses, passportCall("jwt", { strategyType: "jwt" }), this.handlePolicies(policies), this.applyCallbacks(callbacks), this.errorHandler);
+        this.router.put(path,
+            this.attachLogger,
+            this.generateCustomResponses,
+            passportCall("jwt", { strategyType: "jwt" }),
+            this.handlePolicies(policies),
+            this.applyCallbacks(callbacks),
+            this.errorHandler
+        );
     }
     delete(path, policies, ...callbacks) {
-        this.router.delete(path, this.generateCustomResponses, passportCall("jwt", { strategyType: "jwt" }), this.handlePolicies(policies), this.applyCallbacks(callbacks), this.errorHandler);
+        this.router.delete(path,
+            this.attachLogger,
+            this.generateCustomResponses,
+            passportCall("jwt", { strategyType: "jwt" }),
+            this.handlePolicies(policies),
+            this.applyCallbacks(callbacks),
+            this.errorHandler
+        );
     }
 
 
@@ -39,9 +64,9 @@ export default class BaseRouter {
     generateCustomResponses = (req, res, next) => {
         res.sendSuccess = message => res.send({ status: "success", message });
         res.sendSuccessWithPayload = payload => res.send({ status: "success", payload });
-        res.sendInternalError = error => res.status(500).send({ status: "error", error:error.toString() });
-        res.sendIncompletesValues = error => res.status(400).send({ status: "error", message: "The fields are all required", error:error});
-        res.sendNotFound = (error, message) => res.status(400).send({ status: "error", message: message||"No Results - Please verify the entered data.", error:error});
+        res.sendInternalError = error => res.status(500).send({ status: "error", error: error.toString() });
+        res.sendIncompletesValues = error => res.status(400).send({ status: "error", message: "The fields are all required", error: error });
+        res.sendNotFound = (error, message) => res.status(400).send({ status: "error", message: message || "No Results - Please verify the entered data.", error: error });
         res.sendUnauthorized = error => res.status(400).send({ status: "error", error });
         next();
     }
@@ -55,17 +80,16 @@ export default class BaseRouter {
         next()
     }
 
-    //implementar luego este middleware
-    attachLogger = (req,res,next) =>{
+    //Loguer Service:    
+    attachLogger = (req, res, next) => {
+        const logger = new LoggerService("dev");
         req.logger = logger.logger;
         req.logger.http(`${req.method} en ${req.url} - ${new Date().toLocaleTimeString()}`);
-        res.send('prueba')
         next();
     }
-    
+
 
     // Handle Policies:
-
     handlePolicies = policies => {
         return (req, res, next) => {
             if (policies[0] === "PUBLIC") return next();

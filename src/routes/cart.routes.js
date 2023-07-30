@@ -9,7 +9,7 @@ export default class CartRouter extends BaseRouter {
     init() {
         // Retrieve all carts.
         this.get(
-            "/",
+            "/cart",
             ["ADMIN"],
             cartController.getObjects
         )

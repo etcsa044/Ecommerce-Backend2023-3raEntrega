@@ -1,6 +1,7 @@
 
 let add_btn = document.getElementsByClassName("add_btn");
-let cartId = document.getElementById("cartId")
+let cartId = document.getElementById("cartId");
+let goCart_btn = document.getElementById("goCart_btn");
 add_btn = Array.from(add_btn);
 
 add_btn.map( e => {
@@ -22,4 +23,6 @@ add_btn.map( e => {
 
     })
 })
+
+
 

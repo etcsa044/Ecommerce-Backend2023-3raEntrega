@@ -6,32 +6,37 @@ const cartService = cartServices;
 const ticketService = ticketServices;
 
 export default class ViewsController {
-    
+
     renderIndex = async (req, res) => {
-        
-        let {user} = req.user;
-        const products = await productService.getAllObjects();       
-        res.render('index', {user, products});
+        const { user } = req.user || {}
+        const products = await productService.getAllObjects();
+        res.render('index', { user, products });
     }
 
     renderCart = async (req, res) => {
-        const {user} = req.user
-        const cart = await cartService.getObjectById(user.cartId)
-        
-        cart.products.map(e => {
-            const subTotal = e.quantity * e.product.price;
-            e.subTotal = subTotal;
-        })
+        try {
+            const { user } = req.user
+            const cart = await cartService.getObjectById(user.cartId)
+            cart.products.map(e => {
+                const subTotal = e.quantity * e.product.price;
+                e.subTotal = subTotal;
+            })
+            cart.total = cart.products.reduce((acum, e) => acum + e.subTotal, 0)
+            res.render('cart', { cart });
+            
+        } catch (error) {
+            req.logger.info("User will be redirected to LOGIN");
+            res.redirect("/login");
+        }
 
-        cart.total = cart.products.reduce((acum, e) => acum + e.subTotal,0)
-       
-        res.render('cart', {cart});
+
+
     }
 
     renderTicket = async (req, res) => {
-        const {tid} = req.params;
+        const { tid } = req.params;
         const ticket = await ticketService.getObjectById(tid);
-        res.render("ticket",{ticket});
+        res.render("ticket", { ticket });
     }
 
 }

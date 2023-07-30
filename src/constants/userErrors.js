@@ -9,3 +9,5 @@ export const userErrorIncompleteValues = (user) => {
     * password: Was expecting a 'String' value but received. ${user.password}.
     `
 }
+
+//Crear invalidTypes

@@ -78,7 +78,6 @@ export default class CartController extends BaseController {
         const cart = await this.cartService.getObjectByParam({ _id: cid });
         if (!cart) return res.sendNotFound("Cart Not Found.");
         const product = cart.products.filter(e => e.product._id.toString() == pid);
-        console.log(product)
         if (product.length === 0) return res.sendNotFound("Product Not Found.");
         try {
             const result = await this.cartService.removeProductFromCart(cid, pid);

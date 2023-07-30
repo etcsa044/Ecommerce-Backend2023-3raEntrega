@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { passportCall } from "../services/passportcall.service.js";
 import LoggerService from "../services/logger.service.js";
+import config from "../config.js";
 
 
 export default class BaseRouter {
@@ -82,7 +83,7 @@ export default class BaseRouter {
 
     //Loguer Service:    
     attachLogger = (req, res, next) => {
-        const logger = new LoggerService("dev");
+        const logger = new LoggerService(config.logger.MODE);
         req.logger = logger.logger;
         req.logger.http(`${req.method} en ${req.url} - ${new Date().toLocaleTimeString()}`);
         next();

@@ -18,6 +18,9 @@ export default {
     admin:{
         user:process.env.USER,
         password: process.env.PASSWORD
+    },
+    logger:{
+        MODE: process.env.LOGGER_MODE
     } 
 
 }

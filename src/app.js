@@ -18,7 +18,6 @@ const app = express();
 const PORT = config.app.PORT;
 const server = app.listen(PORT, () => { console.log(`listening on PORT ${PORT}`) });
 
-/* logger.log('debug', 'mensaje silly'); */
 
 // Instancias Router:
 const cartRouter = new CartRouter()

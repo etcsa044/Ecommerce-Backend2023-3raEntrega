@@ -1,3 +1,5 @@
+import cluster from 'cluster'
+import { cpus } from 'os';
 import express from "express";
 import handlebars from "express-handlebars";
 import initializePassportStrategies from "./config/passport/passport.config.js";
@@ -12,11 +14,24 @@ import config from './config.js';
 import MongoSingleton from "./config/mongo/singleton.config.js";
 import TicketRouter from "./routes/ticket.routes.js";
 
+const processorsQuantity = cpus().length;
 
-//CREACION SERVER:
-const app = express();
-const PORT = config.app.PORT;
-const server = app.listen(PORT, () => { console.log(`listening on PORT ${PORT}`) });
+if(cluster.isPrimary){
+    console.log('Primary Process')
+    for(let i = 0; i < processorsQuantity ; i++){
+        cluster.fork()
+    }
+    cluster.on("exit", worker=>{
+        cluster.Fork();
+    })
+}else{
+    console.log(`Worker Process id number ${process.pid}`);
+    //CREACION SERVER:
+    const app = express();
+    const PORT = config.app.PORT;
+    const server = app.listen(PORT, () => { console.log(`listening on PORT ${PORT}`) });
+
+
 
 
 // Instancias Router:
@@ -51,3 +66,4 @@ app.use("/api/products", productRouter.getRouter());
 app.use("/api/tickets", ticketRouter.getRouter());
 app.use("/api/sessions", sessionRouter.getRouter());
 
+}

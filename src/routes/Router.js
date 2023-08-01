@@ -1,3 +1,5 @@
+import cluster from 'cluster'
+import { cpus } from 'os';
 import { Router } from "express";
 import { passportCall } from "../services/passportcall.service.js";
 import LoggerService from "../services/logger.service.js";
@@ -85,7 +87,7 @@ export default class BaseRouter {
     attachLogger = (req, res, next) => {
         const logger = new LoggerService(config.logger.MODE);
         req.logger = logger.logger;
-        req.logger.http(`${req.method} en ${req.url} - ${new Date().toLocaleTimeString()}`);
+        req.logger.http(`${req.method} en ${req.url} - ${new Date().toLocaleTimeString()} processed by ${process.pid}`);
         next();
     }
 

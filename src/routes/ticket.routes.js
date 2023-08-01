@@ -19,6 +19,21 @@ export default class TicketRouter extends BaseRouter {
             ticketController.createTicket
         )
 
+        this.get(
+            "/loggerTest",
+            ["PUBLIC"],
+            async (req, res) => {
+                req.logger.fatal('fatal');
+                req.logger.error('error');
+                req.logger.warning('warning');
+                req.logger.http('http');
+                req.logger.info('info');
+                req.logger.debug('debug');
+
+                res.sendStatus(200)
+            }
+        )
+
     }
 
 }

@@ -2,6 +2,9 @@ import { Hasher, JwtService } from "../utils/utils.js";
 import BaseController from "./Controller.js";
 import { cartServices, userServices } from "../services/indexServices.js";
 import { generateUser } from "../mocks/user.mocks.js";
+import MailingService from "../services/mailing.service.js";
+import DTemplates from "../constants/DTemplates.js";
+import UserDTO from "../dtos/user.dto.js";
 
 
 
@@ -19,7 +22,14 @@ export default class UserController extends BaseController {
     }
 
     createUser = async (req, res) => {
-        res.sendSuccess();
+        const mailingService = new MailingService();
+        const user = await req.user;
+        try {
+            const result = await mailingService.sendMail(user.email, DTemplates.WELCOME, user)
+            res.sendSuccess("Registered");
+        } catch (error) {
+            res.sendInternalError(error)
+        }
     }
 
     userLogin = (req, res) => {
@@ -84,9 +94,22 @@ export default class UserController extends BaseController {
             res.sendSuccessWithPayload(result)
         } catch (error) {
             res.sendInternalError(error)
-        }
+        }        
+    }
 
+    restoreRequest = async (req, res)=>{
+        const {email} = req.body;
+        if(!email) return res.sendIncompleteValues("Ingresa una dirección de correo válido.")
+        const user = await userService.getObjectByParam({email});
+        if(!user) return res.sendNotFound("El correo ingresado, no existe en nuestra base de datos") 
+        
+        const restoreToken = jwtService.generateToken(UserDTO.restoreToken(user))
+        const mailingService = new MailingService();
+        const result = await mailingService.sendMail(user.email,DTemplates.RESTORE,{restoreToken})
+    }
 
+    restorePassword = async (req, res) => {
+        
     }
 
 }

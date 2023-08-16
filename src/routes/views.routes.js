@@ -1,3 +1,4 @@
+import UserController from "../controllers/user.controller.js";
 import ViewsController from "../controllers/views.controller.js";
 import BaseRouter from "./Router.js";
 
@@ -42,12 +43,15 @@ export default class ViewsRouter extends BaseRouter {
         )
 
         this.get(
-            "/loggertest",
+            "/restoreRequest",
             ["PUBLIC"],
-            (req, res) => {
-                console.log('Testing');
-                res.send("TESTING")
-            }
+            viewsController.restoreRequest
+        )
+
+        this.get(
+            '/restorePassword',
+            ["NO_AUTH"],
+            viewsController.restorePassword
         )
     }
 

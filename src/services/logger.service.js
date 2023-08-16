@@ -12,17 +12,23 @@ export default class LoggerService {
                 info: 4,
                 debug: 5,
             },
-            //   colors: {
-            //     fatal: 'red',
-            //     error: 'orange',
-            //     warning: 'yellow',
-            //     http: 'green',
-            //     info: 'grey',
-            //     debug: 'blue',
-            //   },
+            colors: {
+                fatal: 'red',
+                error: 'magenta',
+                warning: 'yellow',
+                http: 'green',
+                info: 'grey',
+                debug: 'blue',
+            },
         };
+
+        winston.addColors(this.options.colors);
+
         this.logger = this.createLogger(env);
     }
+
+
+    
 
     createLogger = (env) => {
         switch (env) {
@@ -33,25 +39,35 @@ export default class LoggerService {
                         transports: [
                             new winston.transports.Console({
                                 level: "debug",
-                                format: winston.format.simple()
                             })
-                        ]
+                        ],
+                        format: format.combine(
+                            format.simple(),
+                            format.colorize(this.options.colors)
+                        )
                     })
             case "prod":
                 return winston.createLogger({
                     levels: this.options.levels,
                     transports: [
                         new winston.transports.Console({
-                            level: "http",
-                            format: winston.format.simple()
+                            level: "http"
                         }),
                         new winston.transports.File({
                             level: "warning",
-                            filename: './errors.log',
-                            format: winston.format.simple()
+                            filename: './errors.log'
                         })
                     ]
                 })
         }
     }
+
+   /*  winston.format.printf((msg) =>
+                  colorizer.colorize(
+                    msg.level,
+                    `${msg.timestamp} - ${msg.level}: ${msg.message}`
+                  )
+                ) */
+
+    
 }

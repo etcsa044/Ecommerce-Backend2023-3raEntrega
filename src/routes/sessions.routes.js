@@ -79,6 +79,18 @@ export default class SessionRouter extends BaseRouter {
             userController.userLogout
         )
 
+        this.post(
+            "/restoreRequest",
+            ["NO_AUTH"],
+            userController.restoreRequest
+        )
+
+        this.post(
+            "/restorePassword",
+            ["PUBLIC"],
+            userController.restorePassword
+        )
+
         
 
 

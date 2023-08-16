@@ -10,7 +10,7 @@ buy_btn.addEventListener('click', evt => {
 
 async function fetchData() {
     try {
-        const response = await fetch(`http://localhost:8080/api/tickets/`, {
+        const response = await fetch(`/api/tickets/`, {
             method : "POST",
             headers:{
                 'content-type':"aplication/json"
@@ -19,7 +19,7 @@ async function fetchData() {
         const data = await response.json();
         const tid = data.payload._id;
         if (response.status === 200) {
-            window.location.href = `http://localhost:8080/ticket/${tid}`;
+            window.location.href = `/ticket/${tid}`;
         }
     } catch (error) {
         console.error('Error:', error);

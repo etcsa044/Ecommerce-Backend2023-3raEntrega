@@ -53,6 +53,8 @@ const initializePassportStrategies = () => {
 
             const result = userService.createObject(user);
 
+            req.user = user;
+
             return done(null, result, { message: "Usuario creado correctamente." });
 
         } catch (error) {

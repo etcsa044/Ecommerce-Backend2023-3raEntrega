@@ -12,10 +12,16 @@ export default class UserDTO {
             name,
             email,
             role,
-            cartId :cart._id,
-            productsOnCart : cart.products.length
+            cartId: cart._id,
+            productsOnCart: cart.products.length
         };
     }
-    
+
+    static restoreToken(user) {
+        return {
+            user: user.email
+        };
+    };
+
 }
 

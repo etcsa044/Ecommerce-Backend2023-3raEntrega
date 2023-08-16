@@ -23,20 +23,25 @@ export default class ViewsController {
             })
             cart.total = cart.products.reduce((acum, e) => acum + e.subTotal, 0)
             res.render('cart', { cart });
-            
+
         } catch (error) {
             req.logger.info("User will be redirected to LOGIN");
             res.redirect("/login");
         }
-
-
-
     }
 
     renderTicket = async (req, res) => {
         const { tid } = req.params;
         const ticket = await ticketService.getObjectById(tid);
         res.render("ticket", { ticket });
+    }
+
+    restoreRequest = (req, res) => {
+        res.render('restoreRequest');
+    }
+
+    restorePassword = async (req, res) => {
+        res.render('restorePassword')
     }
 
 }

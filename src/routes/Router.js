@@ -68,9 +68,10 @@ export default class BaseRouter {
         res.sendSuccess = message => res.send({ status: "success", message });
         res.sendSuccessWithPayload = payload => res.send({ status: "success", payload });
         res.sendInternalError = error => res.status(500).send({ status: "error", error: error.toString() });
-        res.sendIncompletesValues = error => res.status(400).send({ status: "error", message: "The fields are all required", error: error });
-        res.sendNotFound = (error, message) => res.status(400).send({ status: "error", message: message || "No Results - Please verify the entered data.", error: error });
-        res.sendUnauthorized = error => res.status(400).send({ status: "error", error });
+        res.sendIncompleteValues = error => res.status(400).send({ status: "error", message: "The fields are all required", error: error });
+        res.sendNotFound = (error, message) => res.status(404).send({ status: "error", message: message || "No Results - Please verify the entered data.", error: error });
+        res.sendUnauthorized = error => res.status(401).send({ status: "error", error });
+        res.sendBadRequest = error => res.status(401).send({ status: "error", error });
         next();
     }
 

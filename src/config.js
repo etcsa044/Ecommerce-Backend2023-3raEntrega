@@ -21,6 +21,11 @@ export default {
     },
     logger:{
         MODE: process.env.LOGGER_MODE
-    } 
+    },
+    mailer:{
+        USER: process.env.MAILER_USER,
+        PASSWORD: process.env.MAILER_PASSWORD
+    }
+
 
 }

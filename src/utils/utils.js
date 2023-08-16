@@ -2,7 +2,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-
+import fs from "fs";
+import Handlebars from "handlebars";
 
 //Cookie Parser:
 export const cookieExtractor = (req) => {
@@ -55,3 +56,12 @@ export class Hasher {
     }
 }
 
+
+//Mailing Service
+
+export const generateMailTemplate = async(template, payload) => {
+    const content = await fs.promises.readFile(`${__src}/templates/${template}.handlebars`, 'utf-8');
+    const precompiledContent = Handlebars.compile(content);
+    const compiledContent = precompiledContent({...payload});
+    return compiledContent;
+}

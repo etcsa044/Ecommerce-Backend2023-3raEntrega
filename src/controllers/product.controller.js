@@ -27,7 +27,7 @@ export default class ProductController extends BaseController {
         } = req.body;
 
         //"complete values" validation:
-        if (!title || !description || !category || !thumbnail || !code || !price || !stock) return res.sendIncompletesValues();
+        if (!title || !description || !category || !thumbnail || !code || !price || !stock) return res.sendIncompleteValues();
 
         //"duplicated code" validation:
         let exist = products.some(e => e.code === code);

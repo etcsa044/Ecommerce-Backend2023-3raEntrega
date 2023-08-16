@@ -8,8 +8,8 @@ const login_frm = document.getElementById("login_frm");
 login_frm.addEventListener("submit", async evt => {
     evt.preventDefault();
     const data = new FormData(login_frm);
-    const obj = {};
-    data.forEach((value, key) => (obj[key] = value));
+    const obj = Object.fromEntries(data);
+    //data.forEach((value, key) => (obj[key] = value));
     
     const response = await fetch("/api/sessions/login", {
         method: "POST",

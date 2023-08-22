@@ -5,6 +5,7 @@ import { generateUser } from "../mocks/user.mocks.js";
 import MailingService from "../services/mailing.service.js";
 import DTemplates from "../constants/DTemplates.js";
 import UserDTO from "../dtos/user.dto.js";
+import config from "../config.js";
 
 
 
@@ -109,7 +110,28 @@ export default class UserController extends BaseController {
     }
 
     restorePassword = async (req, res) => {
-        
+        const {password, token} = req.body;
+
+        try {
+            const tokenUser = await jwtService.verify(token);
+
+            const user = await userService.getObjectByParam({email: tokenUser.user});
+
+            const isSamePassword = await hasher.validatePassword(password, user.password);
+
+            if(isSamePassword) return res.sendBadRequest("Your new password has to be different than the previous password.")
+
+            const newHashedPassword = await hasher.createHash(password);
+
+            await userService.updateObject(user._id, {password:newHashedPassword});
+
+            res.sendSuccess("Password successfully changed"); 
+
+        } catch (error) {
+            console.log(error);
+        }
+
+        res.sendSuccess()
     }
 
 }

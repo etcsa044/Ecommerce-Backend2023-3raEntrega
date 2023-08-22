@@ -75,7 +75,7 @@ export default class SessionRouter extends BaseRouter {
 
         this.post(
             "/logout",
-            ["USER"],
+            ["PREMIUM"],
             userController.userLogout
         )
 

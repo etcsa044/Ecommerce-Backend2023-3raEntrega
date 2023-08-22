@@ -23,8 +23,11 @@ export default class ProductController extends BaseController {
             thumbnail,
             code,
             price,
-            stock
+            stock,
         } = req.body;
+
+        const owner = req.user.user.email;
+        console.log(owner);
 
         //"complete values" validation:
         if (!title || !description || !category || !thumbnail || !code || !price || !stock) return res.sendIncompleteValues();
@@ -41,8 +44,10 @@ export default class ProductController extends BaseController {
             thumbnail,
             code,
             price,
-            stock
+            stock,
+            owner:owner
         }
+        console.log(productToAdd)
 
         try {
             this.service.createObject(productToAdd);
@@ -57,7 +62,7 @@ export default class ProductController extends BaseController {
     generateMocksProducts = async (req, res) => {
         
         const products = [];
-        for (let i = 0; i <= 100; i++) {
+        for (let i = 0; i < 1; i++) {
             products.push(generateProduct())
         }
         

@@ -22,7 +22,7 @@ if(cluster.isPrimary){
         cluster.fork()
     }
     cluster.on("exit", worker=>{
-        cluster.Fork();
+        cluster.fork();
     })
 }else{
     console.log(`Worker Process id number ${process.pid}`);

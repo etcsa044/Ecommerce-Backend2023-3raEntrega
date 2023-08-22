@@ -50,7 +50,7 @@ export default class ViewsRouter extends BaseRouter {
 
         this.get(
             '/restorePassword',
-            ["NO_AUTH"],
+            ["PUBLIC"],
             viewsController.restorePassword
         )
     }

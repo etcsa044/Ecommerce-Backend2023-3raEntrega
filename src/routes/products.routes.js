@@ -7,9 +7,9 @@ export default class ProductRouter extends BaseRouter {
 
     init() {
 
-        this.get(
+        this.post(
             "/mock",
-            ["PUBLIC"],
+            ["ADMIN"],
             productController.generateMocksProducts
         )
 
@@ -37,21 +37,21 @@ export default class ProductRouter extends BaseRouter {
         // Create a new product. [PRIVATE access]
         this.post(
             "/",
-            ["PUBLIC"],
+            ["ADMIN", "PREMIUM"],
             productController.createProduct
         )
 
         // Update a product by its ID. [ADMIN access]
         this.put(
             "/:id",
-            ["PUBLIC"],
+            ["ADMIN", "PREMIUM"],
             productController.updateObject
         )
 
         // Delete a product by its ID. [ADMIN access]
         this.delete(
             "/:id",
-            ["PUBLIC"],
+            ["ADMIN", "PREMIUM"],
             productController.deleteObject
         )
 

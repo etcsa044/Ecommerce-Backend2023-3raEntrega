@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import fs from "fs";
 import Handlebars from "handlebars";
+import config from "../config.js";
 
 //Cookie Parser:
 export const cookieExtractor = (req) => {
@@ -26,19 +27,29 @@ export const __root = dirname(dirname(dirname(__filename)));
 export class JwtService {
 
     constructor() {
-        this.secret = "jwtS3cret";
+        this.secret = config.jwt.SECRET;
     }
 
     generateToken = (user) => {
-        const token = jwt.sign({ user }, this.secret, { expiresIn: "1h" });
+        const token = jwt.sign({ user }, this.secret, { expiresIn: '1d' });
         return token;
     }
 
-    verify = (token) => {
-        jwt.verify(token, this.secret, (error, credentials) => {
-            if (error) return resizeBy.status(401).send({ error: "Token inválido" });
-            return credentials.user;
-        })
+    verify = async (token) => {
+
+        try {
+            const credentials = await new Promise((res, rej) => {
+                jwt.verify(token, this.secret, (error, credentials) => {
+                    if (error) return rej(error);
+                    res(credentials);
+                })
+            })
+            return credentials.user
+        } catch (error) {
+            console.log("the token has expired" + error)
+            throw new error;
+        }
+        
     }
 
 }

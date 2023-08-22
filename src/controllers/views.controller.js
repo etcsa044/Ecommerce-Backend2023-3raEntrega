@@ -1,9 +1,11 @@
 import { cartServices, productServices, ticketServices } from "../services/indexServices.js";
+import { JwtService } from "../utils/utils.js";
 
 
 const productService = productServices;
 const cartService = cartServices;
 const ticketService = ticketServices;
+const jwtService = new JwtService();
 
 export default class ViewsController {
 
@@ -41,6 +43,15 @@ export default class ViewsController {
     }
 
     restorePassword = async (req, res) => {
+
+        const {token} = req.query;
+
+        try {
+            const validToken = await jwtService.verify(token);
+        } catch (error) {
+            res.render('invalidToken');
+        }
+
         res.render('restorePassword')
     }
 

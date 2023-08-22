@@ -41,6 +41,11 @@ const schema = new mongoose.Schema({
         required:true,
         default: true   
     },
+    owner:{
+        type: String,
+        required: true,
+        default: "admin"
+    }
 },{timestamps:{createdAt:`created_at`, updatedAt:`updated_at`}})
 
 

@@ -50,9 +50,9 @@ export default class ProductRouter extends BaseRouter {
 
         // Delete a product by its ID. [ADMIN access]
         this.delete(
-            "/:id",
+            "/:pid",
             ["ADMIN", "PREMIUM"],
-            productController.deleteObject
+            productController.deleteProduct
         )
 
 

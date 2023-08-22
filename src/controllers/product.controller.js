@@ -74,6 +74,43 @@ export default class ProductController extends BaseController {
         }
     }
 
+    deleteProduct = async (req, res) => {
+        const {pid} = req.params;
+        const {user} = req.user;
+        console.log(user)
+        const productToDelete = await productService.getObjectById(pid);
+        const owner = productToDelete.owner || "admin"
+        console.log(owner)
+        switch (user.role) {
+            case 'premium':
+                if(owner === user.email){
+                    try {
+                        const result = await productService.deleteObject(pid)
+                        console.log(result)
+                        res.sendSuccess()
+                    } catch (error) {
+                        return res.sendInternalError(error);
+                    }
+                }else{
+                    res.sendBadRequest("DENIED - You are not the owner of this product")
+                }
+                
+                break;
+            case 'admin':
+                try {
+                    const result = await productService.deleteObject(pid);
+                    res.sendSuccess()
+                } catch (error) {
+                    return res.sendInternalError(error);
+                }
+                
+            default:
+                break;
+        }
+        
+        
+    }
+
 
 }
 

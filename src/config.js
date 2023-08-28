@@ -13,7 +13,8 @@ export default {
         PORT: process.env.PORT||8080,
     },
     mongo:{
-        URL:process.env.DB||'localhost:27017'
+        URL:process.env.DB||'localhost:27017',
+        URL_TEST: process.env.TEST_DB
     },
     admin:{
         user:process.env.USER,

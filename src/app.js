@@ -6,6 +6,9 @@ import initializePassportStrategies from "./config/passport/passport.config.js";
 import passport from "passport";
 import cookieParser from "cookie-parser";
 import { __src, __root } from "./utils/utils.js";
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUiExpress from 'swagger-ui-express';
+
 import SessionRouter from "./routes/sessions.routes.js";
 import ViewsRouter from "./routes/views.routes.js";
 import ProductRouter from "./routes/products.routes.js";
@@ -14,8 +17,22 @@ import config from './config.js';
 import MongoSingleton from "./config/mongo/singleton.config.js";
 import TicketRouter from "./routes/ticket.routes.js";
 
-const processorsQuantity = cpus().length;
 
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.1',
+        info: {
+            title: "E-commerce", 
+            description: "Back End project for Coder's Full Stack Developer career. By Carlos Pelayes. 2023."
+        }
+    },
+    apis: [`${__src}/docs/**/*.yaml`]
+}
+
+const specs = swaggerJSDoc(swaggerOptions);
+
+
+const processorsQuantity = cpus().length;
 if(cluster.isPrimary){
     console.log('Primary Process')
     for(let i = 0; i < processorsQuantity ; i++){
@@ -50,7 +67,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(`${__src}/public`));
 
-// CONFIGURACIÓN HANDLEBARS:
+//SWAGGER:
+app.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
+
+// HANDLEBARS CONFIGURATION:
 app.engine("handlebars", handlebars.engine());
 app.set("views", `${__src}/views`);
 app.set("view engine", "handlebars");

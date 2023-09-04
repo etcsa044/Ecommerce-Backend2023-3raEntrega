@@ -6,6 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "mocha test/dao/Users.test.js",
+    "testChai": "mocha test/dao/ChaiUsers.test.js",
+    "supertest": "mocha test/supertest.test.js",
     "start": "node src/app.js",
     "dev": "nodemon src/app.js -m dev"
   },
@@ -38,6 +40,8 @@
     "winston": "^3.10.0"
   },
   "devDependencies": {
-    "mocha": "^10.2.0"
+    "chai": "^4.3.8",
+    "mocha": "^10.2.0",
+    "supertest": "^6.3.3"
   }
 }

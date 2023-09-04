@@ -27,7 +27,7 @@ export default class UserController extends BaseController {
         const user = await req.user;
         try {
             const result = await mailingService.sendMail(user.email, DTemplates.WELCOME, user)
-            res.sendSuccess("Registered");
+            res.sendSuccessWithPayload(user, "Registered");
         } catch (error) {
             res.sendInternalError(error)
         }

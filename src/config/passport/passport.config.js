@@ -9,6 +9,7 @@ import { cartServices, userServices } from "../../services/indexServices.js";
 import ErrorService from "../../services/errors.service.js";
 import { userErrorIncompleteValues } from "../../constants/userErrors.js";
 import EErrors from "../../constants/EErrors.js";
+import { error } from "winston";
 
 const LocalStrategy = local.Strategy;
 const JWTStrategy = Strategy;
@@ -35,7 +36,7 @@ const initializePassportStrategies = () => {
                     code: EErrors.INCOMPLETE_VALUES,
                     status: 400
                 })
-                return done(null, false, { status: "Error", error: "Debe completar todos los campos" });
+                return done(error,false, { status: "Error", error: "Debe completar todos los campos" });
             }
             let user = await userService.getObjectByParam({email});
 

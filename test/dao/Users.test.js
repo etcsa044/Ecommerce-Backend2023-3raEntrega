@@ -3,27 +3,43 @@ import UsersDao from "../../src/dao/mongo/managers/users.manager.js"
 import Assert from "assert";
 import config from "../../src/config.js";
 
-console.log(config.mongo.URL_TEST)
-
 mongoose.connect(config.mongo.URL_TEST);
 
 const assert = Assert.strict;
 
-describe( "MANAGERS's Users Testing", ()=>{
+describe("MANAGERS's Users Testing", function () {
 
-    before(function(){
+    this.timeout(5000);
+
+    before(function () {
         this.userDao = new UsersDao();
     })
-
-    beforeEach(function(){
-        this.timeout(100000);
+    
+    this.beforeEach(function(){
+        mongoose.connection.collections.users.drop();
     })
 
-    it("Manager should retrieve an array of USERS", async function(){
+
+    it("Manager should retrieve an array of USERS", async function () {
         const result = await this.userDao.get();
-        console.log(result)
         assert.strictEqual(Array.isArray(result), true);
-        resolve();
+    })
+
+    it("Manager should insert a new user in the DB", async function () {
+        const mockUser = {
+            first_name: "Usuario",
+            last_name: "Test",
+            email: "test@unitario.com",
+            password: "123"
+        }
+
+        const result = await this.userDao.create(mockUser)
+        assert.ok(result._id);
+    })
+
+    it("Manager should retrieve a specific user by email", async function(){
+        const user = this.userDao.getBy({email:"test@unitario.com"});
+        assert.strictEqual(typeof user, "object");
     })
 
 

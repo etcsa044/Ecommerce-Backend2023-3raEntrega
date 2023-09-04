@@ -66,7 +66,7 @@ export default class BaseRouter {
     // Middleware Custom Responses: 
     generateCustomResponses = (req, res, next) => {
         res.sendSuccess = message => res.send({ status: "success", message });
-        res.sendSuccessWithPayload = payload => res.send({ status: "success", payload });
+        res.sendSuccessWithPayload = (payload, message) => res.send({ status: "success", payload, message });
         res.sendInternalError = error => res.status(500).send({ status: "error", error: error.toString() });
         res.sendIncompleteValues = error => res.status(400).send({ status: "error", message: "The fields are all required", error: error });
         res.sendNotFound = (error, message) => res.status(404).send({ status: "error", message: message || "No Results - Please verify the entered data.", error: error });

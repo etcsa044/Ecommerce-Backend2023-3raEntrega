@@ -9,7 +9,6 @@ import { cartServices, userServices } from "../../services/indexServices.js";
 import ErrorService from "../../services/errors.service.js";
 import { userErrorIncompleteValues } from "../../constants/userErrors.js";
 import EErrors from "../../constants/EErrors.js";
-import { error } from "winston";
 
 const LocalStrategy = local.Strategy;
 const JWTStrategy = Strategy;

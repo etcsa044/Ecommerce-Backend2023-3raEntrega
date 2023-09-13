@@ -22,5 +22,9 @@ describe('Integrated Testing', function () {
             expect(status).to.be.equal(200)
             expect(_body.payload._id).to.be.ok;
         })
+
+        it('POST endpoint api/sessions should retrieve a new User in the DB', async function () {
+
+        })
     })
 })

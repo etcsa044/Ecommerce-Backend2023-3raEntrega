@@ -14,6 +14,12 @@ export default class SessionRouter extends BaseRouter {
             ["PUBLIC"],
             userController.generateMocksUsers
         )
+
+        this.get(
+            "/premium/:id",
+            ["PUBLIC"],
+            userController.changeRole
+        )
         
         this.get(
             "/",
@@ -33,32 +39,6 @@ export default class SessionRouter extends BaseRouter {
             userController.getObjectBy
         )
 
-
-        this.post(
-            "/register",
-            ["NO_AUTH"], // public, admin, private
-            passportCall(
-                "register",
-                {
-                    strategyType: "locals"
-                }
-            ),
-            userController.createUser
-        );
-
-        this.post(
-            "/login",
-            ["NO_AUTH"],
-            passportCall(
-                "login",
-                {
-                    strategyType: "locals"
-                }
-            ),
-            userController.userLogin
-        )
-
-
         this.get(
             "/jwt",
             ["PUBLIC"],
@@ -74,8 +54,35 @@ export default class SessionRouter extends BaseRouter {
         )
 
         this.post(
+            "/register",
+            ["NO_AUTH"], // public, admin, private
+            passportCall(
+                "register",
+                {
+                    strategyType: "locals"
+                }
+            ),
+            userController.createUser
+        );
+
+
+        this.post(
+            "/login",
+            ["NO_AUTH"],
+            passportCall(
+                "login",
+                {
+                    strategyType: "locals"
+                }
+            ),
+            userController.userLogin
+        )
+
+
+
+        this.post(
             "/logout",
-            ["PREMIUM"],
+            ["PREMIUM", "USER"],
             userController.userLogout
         )
 

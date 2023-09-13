@@ -33,7 +33,10 @@ export default class UserController extends BaseController {
         }
     }
 
-    userLogin = (req, res) => {
+    userLogin = async (req, res) => {
+        let {id} = req.user;
+        id = id.toString();
+        await userService.updateObject(id, {last_connection : Date.now()})
         const token = jwtService.generateToken(req.user);
         res.cookie("authToken",
             token,
@@ -44,7 +47,10 @@ export default class UserController extends BaseController {
         ).sendSuccess("Login succesfully");
     }
 
-    userLogout = (req, res) => {
+    userLogout = async (req, res) => {
+        let {id} = req.user.user;
+        console.log(id)
+        await userService.updateObject(id, {last_connection : Date.now()})
         return res.clearCookie("authToken").sendSuccess("Logout Succesfully")
     }
 
@@ -132,6 +138,18 @@ export default class UserController extends BaseController {
         }
 
         res.sendSuccess()
+    }
+
+    changeRole = async(req, res) => {
+        const {id} = req.params;
+        const user = await userService.getObjectById(id);
+        if(user.role === "user"){
+            user.role = "premium"
+        }else if(user.role === "premium"){
+            user.role = "user"
+        }
+        await userService.updateObject(id, user);
+        res.sendSuccess(`Role changed new role: ${user.role}` )
     }
 
 }

@@ -1,10 +1,12 @@
-import { cartServices, productServices, ticketServices } from "../services/indexServices.js";
+import UserDTO from "../dtos/user.dto.js";
+import { cartServices, productServices, ticketServices, userServices } from "../services/indexServices.js";
 import { JwtService } from "../utils/utils.js";
 
 
 const productService = productServices;
 const cartService = cartServices;
 const ticketService = ticketServices;
+const userService = userServices;
 const jwtService = new JwtService();
 
 export default class ViewsController {
@@ -43,16 +45,20 @@ export default class ViewsController {
     }
 
     restorePassword = async (req, res) => {
-
-        const {token} = req.query;
-
+        const { token } = req.query;
         try {
             const validToken = await jwtService.verify(token);
         } catch (error) {
             res.render('invalidToken');
         }
-
         res.render('restorePassword')
+    }
+
+    renderUsers = async (req, res) => {
+        const { user } = req.user;
+        const users = await userService.getAllObjects();
+        const publicUsers = UserDTO.getPublicUsers(users);
+        res.render("users", { publicUsers, user });
     }
 
 }

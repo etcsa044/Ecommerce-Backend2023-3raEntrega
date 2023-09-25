@@ -1,24 +1,19 @@
 <section>
-    {{#if user}}
-    <h2> Welcome {{user.name}}!</h2>
-    <p id="cartId">{{user.cartId}}</p>
-    {{else}}
-    <h2>Welcome to our Site!</h2>
-    {{/if}}
-
-
+    {{> header}}
+    <p id="cartId" style="display: none;">{{user.cartId}}</p>
     <h1>Explore our Products</h1>
 
     {{#if user}}
     <a href="/cart">go to Cart</a>
     {{/if}}
-    <ol>
+    <ol class="container-fluid d-flex flex-row mb-3 flex-wrap row-gap-3 column-gap-3 justify-content-around">
         {{#each products}}
-        <li>
-            <p>{{this.title}}</p>
-            <p>{{this.description}}</p>
-            <p>{{this.price}}</p>
-            <a href="" id="{{this._id}}" class="add_btn">add to cart</a>
+        <li class="card" style="width: 18rem">
+            <img src="{{this.thumbnail}}" class="card-img-top" alt="Product Image">
+            <p class="card-text">{{this.title}}</p>
+            <p class="card-text">{{this.description}}</p>
+            <p class="card-text">$ {{this.price}}</p>
+            <a href="" id="{{this._id}}" class="card-link add_btn">add to cart</a>
         </li>
         {{/each}}
     </ol>

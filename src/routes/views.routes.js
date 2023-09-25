@@ -53,6 +53,12 @@ export default class ViewsRouter extends BaseRouter {
             ["PUBLIC"],
             viewsController.restorePassword
         )
+
+        this.get(
+            "/users",
+            ["ADMIN"],
+            viewsController.renderUsers
+        )
     }
 
 }

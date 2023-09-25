@@ -67,15 +67,16 @@ const initializePassportStrategies = () => {
     passport.use("login", new LocalStrategy({ usernameField: "email" }, async (email, password, done) => {
 
         let userDB;
-
         try {
             if (email === config.admin.user && password === config.admin.password) {
+                
                 const user = {
-                    id: 0,
+                    id: "0",
                     name: `SuperAdmin`,
                     email: "...",
                     role: "ADMIN"
                 }
+
                 return done(null, user);
             };
 

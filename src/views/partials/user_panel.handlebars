@@ -1,0 +1,19 @@
+<section>
+    <article>
+        <h2>Welcome {{user.name}}</h2>
+    </article>
+    {{#if (eq user.role "premium")}}
+    <article>
+        <a href="/api/sessions/logout" class="nav-link">logout</a>
+    </article>
+    {{/if}}
+    {{#if (eq user.role "ADMIN")}}
+            <article>
+        <a href="/users/" class="nav-link">Users</a>
+        <a href="/api/products/" class="nav-link">products</a>
+        <a href="/api/sessions/logout" class="nav-link">logout</a>
+    </article>
+    {{/if}}
+
+
+</section>

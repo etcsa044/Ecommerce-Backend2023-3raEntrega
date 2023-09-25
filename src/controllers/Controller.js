@@ -51,6 +51,7 @@ export default class BaseController {
             const result = await this.service.updateObject(id, req.body);
             if (!result) return res.sendNotFound();
             res.sendSuccess("Updated");
+            
         } catch (error) {
             res.sendInternalError(error);
         }

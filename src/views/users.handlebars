@@ -1,0 +1,41 @@
+<section>
+    {{> header}}
+    <table class="table table-striped container">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">E-mail</th>
+                <th scope="col">Role</th>
+                <th scope="col">Last Connection</th>
+                <th scope="col">Swich Role</th>
+                <th scope="col">Delete User</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each publicUsers}}
+            <tr>
+                <td>{{@index}}</td>
+                <td>{{this.name}}</td>
+                <td>{{this.email}}</td>
+                <td>{{this.role}}</td>
+                <td>{{this.last_connection}}</td>
+                {{#if (eq this.role "user")}}
+                <td>
+                    <button id="{{this.id}}" class="changeRol_btn btn btn-primary btn-sm w-100">Premium</button>
+                </td>
+                {{else}}
+                <td>
+                    <button id="{{this.id}}" class="changeRol_btn btn btn-primary btn-sm w-100">User</button>
+                </td>
+                {{/if}}
+                <td>
+                    <button id="{{this.id}}" class="delete_btn btn btn-danger btn-sm w-100">Delete</button>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</section>
+
+<script src="/js/users.js"></script>

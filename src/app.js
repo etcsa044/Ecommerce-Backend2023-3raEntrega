@@ -74,6 +74,10 @@ app.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 app.engine("handlebars", handlebars.engine());
 app.set("views", `${__src}/views`);
 app.set("view engine", "handlebars");
+const hbars = handlebars.create({});
+hbars.handlebars.registerHelper("eq", function(a, b){
+    return a === b;
+})
 
 // Passport:
 app.use(passport.initialize());

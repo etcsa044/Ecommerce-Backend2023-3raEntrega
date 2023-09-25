@@ -10,14 +10,20 @@ export default class SessionRouter extends BaseRouter {
     init() {
 
         this.get(
+            "/logout",
+            ["ADMIN", "USER", "PREMIUM"],
+            userController.userLogout
+        )
+
+        this.get(
             "/mock",
             ["PUBLIC"],
             userController.generateMocksUsers
         )
 
-        this.get(
+        this.put(
             "/premium/:id",
-            ["PUBLIC"],
+            ["ADMIN"],
             userController.changeRole
         )
         
@@ -78,14 +84,6 @@ export default class SessionRouter extends BaseRouter {
             userController.userLogin
         )
 
-
-
-        this.post(
-            "/logout",
-            ["PREMIUM", "USER"],
-            userController.userLogout
-        )
-
         this.post(
             "/restoreRequest",
             ["NO_AUTH"],
@@ -96,6 +94,12 @@ export default class SessionRouter extends BaseRouter {
             "/restorePassword",
             ["PUBLIC"],
             userController.restorePassword
+        )
+
+        this.delete(
+            "/delete/:id",
+            ["ADMIN"],
+            userController.deleteObject
         )
 
         

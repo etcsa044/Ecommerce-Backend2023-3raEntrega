@@ -35,7 +35,7 @@ const specs = swaggerJSDoc(swaggerOptions);
 const processorsQuantity = cpus().length;
 if(cluster.isPrimary){
     console.log('Primary Process')
-    for(let i = 0; i < processorsQuantity ; i++){
+    for(let i = 0; i < 4 ; i++){
         cluster.fork()
     }
     cluster.on("exit", worker=>{

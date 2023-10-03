@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "type": "module",
+  "engines": {
+    "node": ">=14 <19"
+  },
   "scripts": {
     "test": "mocha test/dao/Users.test.js",
     "testChai": "mocha test/dao/ChaiUsers.test.js",

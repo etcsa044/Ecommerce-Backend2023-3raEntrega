@@ -102,6 +102,12 @@ export default class SessionRouter extends BaseRouter {
             userController.deleteObject
         )
 
+        this.delete(
+            "/delete",
+            ["ADMIN"],
+            userController.deleteInactives
+        )
+
         
 
 

@@ -5,7 +5,6 @@ import { generateUser } from "../mocks/user.mocks.js";
 import MailingService from "../services/mailing.service.js";
 import DTemplates from "../constants/DTemplates.js";
 import UserDTO from "../dtos/user.dto.js";
-import config from "../config.js";
 
 
 
@@ -34,10 +33,10 @@ export default class UserController extends BaseController {
     }
 
     userLogin = async (req, res) => {
-        let {id} = req.user;
+        let { id } = req.user;
         id = id.toString();
-        if(req.user.role != "ADMIN"){
-            await userService.updateObject(id, {last_connection : Date.now()})
+        if (req.user.role != "ADMIN") {
+            await userService.updateObject(id, { last_connection: Date.now() })
         }
         const token = jwtService.generateToken(req.user);
         res.cookie("authToken",
@@ -50,9 +49,9 @@ export default class UserController extends BaseController {
     }
 
     userLogout = async (req, res) => {
-        let {id} = req.user.user;
-        if(req.user.user.role != "ADMIN"){
-            await userService.updateObject(id, {last_connection : Date.now()})
+        let { id } = req.user.user;
+        if (req.user.user.role != "ADMIN") {
+            await userService.updateObject(id, { last_connection: Date.now() })
         }
         return res.clearCookie("authToken").redirect("/")
     }
@@ -62,27 +61,27 @@ export default class UserController extends BaseController {
         for (let i = 0; i < 100; i++) {
             users.push(generateUser())
         }
-        
+
         try {
             let usersChecked = [];
             await Promise.all(users.map(async e => {
-                
+
                 try {
-                    
+
                     const first_name = e.first_name;
                     const last_name = e.last_name;
                     const email = e.email;
                     const password = e.password;
-                    
+
                     if (!first_name || !last_name || !email || !password) return //done(null, false, { status: "Error", error: "Debe completar todos los campos" });
-                    let user = users.includes( e => e.email === email);
-                    
-                    
+                    let user = users.includes(e => e.email === email);
+
+
                     if (user) return //done(null, false, { message: "El email ya se encuentra registrado" });
                     const hashedPassword = await hasher.createHash(password);
-                    
+
                     const cart = await cartService.createObject();
-                    
+
                     user = {
                         first_name,
                         last_name,
@@ -91,50 +90,50 @@ export default class UserController extends BaseController {
                         password: hashedPassword
                     }
 
-                    
+
                     usersChecked.push(user)
                     return usersChecked
-                    
+
                 } catch (error) {
                     console.log(error)
                 }
             }))
-            
+
             const result = await userService.createManyObjects(usersChecked);
             res.sendSuccessWithPayload(result)
         } catch (error) {
             res.sendInternalError(error)
-        }        
+        }
     }
 
-    restoreRequest = async (req, res)=>{
-        const {email} = req.body;
-        if(!email) return res.sendIncompleteValues("Ingresa una dirección de correo válido.")
-        const user = await userService.getObjectByParam({email});
-        if(!user) return res.sendNotFound("El correo ingresado, no existe en nuestra base de datos") 
-        
+    restoreRequest = async (req, res) => {
+        const { email } = req.body;
+        if (!email) return res.sendIncompleteValues("Ingresa una dirección de correo válido.")
+        const user = await userService.getObjectByParam({ email });
+        if (!user) return res.sendNotFound("El correo ingresado, no existe en nuestra base de datos")
+
         const restoreToken = jwtService.generateToken(UserDTO.restoreToken(user))
         const mailingService = new MailingService();
-        const result = await mailingService.sendMail(user.email,DTemplates.RESTORE,{restoreToken})
+        const result = await mailingService.sendMail(user.email, DTemplates.RESTORE, { restoreToken })
     }
 
     restorePassword = async (req, res) => {
-        const {password, token} = req.body;
+        const { password, token } = req.body;
 
         try {
             const tokenUser = await jwtService.verify(token);
 
-            const user = await userService.getObjectByParam({email: tokenUser.user});
+            const user = await userService.getObjectByParam({ email: tokenUser.user });
 
             const isSamePassword = await hasher.validatePassword(password, user.password);
 
-            if(isSamePassword) return res.sendBadRequest("Your new password has to be different than the previous password.")
+            if (isSamePassword) return res.sendBadRequest("Your new password has to be different than the previous password.")
 
             const newHashedPassword = await hasher.createHash(password);
 
-            await userService.updateObject(user._id, {password:newHashedPassword});
+            await userService.updateObject(user._id, { password: newHashedPassword });
 
-            res.sendSuccess("Password successfully changed"); 
+            res.sendSuccess("Password successfully changed");
 
         } catch (error) {
             console.log(error);
@@ -143,16 +142,43 @@ export default class UserController extends BaseController {
         res.sendSuccess()
     }
 
-    changeRole = async(req, res) => {
-        const {id} = req.params;
+    changeRole = async (req, res) => {
+        const { id } = req.params;
         const user = await userService.getObjectById(id);
-        if(user.role === "user"){
+        if (user.role === "user") {
             user.role = "premium"
-        }else if(user.role === "premium"){
+        } else if (user.role === "premium") {
             user.role = "user"
         }
         await userService.updateObject(id, user);
         res.sendSuccess("Role Changed")
+    }
+
+    deleteInactives = async (req, res) => {
+
+        const currentDate = Date.now();
+        const users = await userService.getAllObjects();
+
+        try {
+            users.map(async e => {
+                const newFormat = new Date(e.last_connection);
+                const inactiveTime = (currentDate - newFormat.getTime()) / 60000;
+
+
+                if (inactiveTime > 1) {
+                    await userService.deleteObject(e._id);
+                    const mailingService = new MailingService();
+                    const result = await mailingService.sendMail(e.email, DTemplates.EXPIRED, {})
+                    console.log(result)
+                }
+            })
+            res.sendSuccess();
+
+        } catch (error) {
+            console.log(error);
+        }
+
+
     }
 
 }

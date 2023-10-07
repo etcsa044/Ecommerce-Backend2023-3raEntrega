@@ -1,6 +1,8 @@
 import BaseController from "./Controller.js";
 import { productServices } from "../services/indexServices.js";
 import { generateProduct } from "../mocks/products.mocks.js";
+import MailingService from "../services/mailing.service.js";
+import DTemplates from "../constants/DTemplates.js";
 
 const productService = productServices;
 
@@ -79,6 +81,7 @@ export default class ProductController extends BaseController {
         const {user} = req.user;
         console.log(user)
         const productToDelete = await productService.getObjectById(pid);
+        if(!productToDelete) return res.sendBadRequest("product doesn't exist")
         const owner = productToDelete.owner || "admin"
         console.log(owner)
         switch (user.role) {
@@ -96,8 +99,13 @@ export default class ProductController extends BaseController {
                 }
                 
                 break;
-            case 'admin':
+            case 'ADMIN':
                 try {
+                    
+                    if(productToDelete.owner != "..."){
+                        const maillingService = new MailingService();
+                        const result = await maillingService.sendMail(owner, DTemplates.EXPIRED, {});
+                    }
                     const result = await productService.deleteObject(pid);
                     res.sendSuccess()
                 } catch (error) {

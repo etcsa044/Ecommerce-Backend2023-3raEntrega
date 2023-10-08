@@ -4,7 +4,7 @@ import { __src } from "../utils/utils.js";
 
 export default {
     welcome: {
-        subject: "Bienvenido!",
+        subject: "Welcome to Our E-Commerce",
         attachments: [
             {
                 filename: 'banner.png',
@@ -14,17 +14,27 @@ export default {
         ]
     },
     restore: {
-        subject: "Restaurar Contraseña",
+        subject: "Restore you Password",
         attachments: [
             {
                 filename: 'banner.png',
-                path: `${__src}/public/img/handShake.jpg`,
+                path: `${__src}/public/img/restorePassword.jpg`,
                 cid: 'banner'
             }
         ]
     },
-    restore: {
+    expired: {
         subject: "Your account has expired",
+        attachments: [
+            {
+                filename: 'banner.png',
+                path: `${__src}/public/img/deletedProduct640.png`,
+                cid: 'banner'
+            }
+        ]
+    },
+    deleted: {
+        subject: "One of your Product was deleted.",
         attachments: [
             {
                 filename: 'banner.png',

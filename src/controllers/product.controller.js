@@ -3,6 +3,8 @@ import { productServices } from "../services/indexServices.js";
 import { generateProduct } from "../mocks/products.mocks.js";
 import MailingService from "../services/mailing.service.js";
 import DTemplates from "../constants/DTemplates.js";
+import { userManager } from "../dao/mongo/managers/index.js";
+import UserDTO from "../dtos/user.dto.js";
 
 const productService = productServices;
 
@@ -79,11 +81,14 @@ export default class ProductController extends BaseController {
     deleteProduct = async (req, res) => {
         const {pid} = req.params;
         const {user} = req.user;
-        console.log(user)
         const productToDelete = await productService.getObjectById(pid);
         if(!productToDelete) return res.sendBadRequest("product doesn't exist")
-        const owner = productToDelete.owner || "admin"
-        console.log(owner)
+        const owner = productToDelete.owner || "admin";
+        const ownerDetails = await userManager.getBy({email:owner});
+
+        const publicUser = UserDTO.getPublicUser(ownerDetails);
+
+        console.log(publicUser);
         switch (user.role) {
             case 'premium':
                 if(owner === user.email){
@@ -102,11 +107,13 @@ export default class ProductController extends BaseController {
             case 'ADMIN':
                 try {
                     
+                    console.log(productToDelete);
+
                     if(productToDelete.owner != "..."){
                         const maillingService = new MailingService();
-                        const result = await maillingService.sendMail(owner, DTemplates.EXPIRED, {});
+                        const result = await maillingService.sendMail(owner, DTemplates.DELETED, {publicUser, productToDelete});
                     }
-                    const result = await productService.deleteObject(pid);
+                    //const result = await productService.deleteObject(pid);
                     res.sendSuccess()
                 } catch (error) {
                     return res.sendInternalError(error);

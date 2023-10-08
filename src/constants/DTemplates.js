@@ -3,5 +3,6 @@
 export default {
     WELCOME: 'welcome',
     RESTORE: 'restore',
-    EXPIRED: 'expiredAccount'
+    EXPIRED: 'expiredAccount',
+    DELETED: 'deleteProduct'
 }
